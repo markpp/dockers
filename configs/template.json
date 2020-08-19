@@ -1,0 +1,30 @@
+{
+    "gpu": true,
+    "ubuntu": "20.04",
+    "deps": [
+        {
+            "basics": "basics"
+        },
+        {
+            "python": "python3"
+        }
+    ],
+    "image_processing": [
+        {
+            "opencv": "opencv4"
+        }
+    ],
+    "pointcloud_processing": [
+        {
+            "pcl": "pcl"
+        }
+    ],
+    "sensors": [
+        {
+            "realsense": "zed"
+        },
+        {
+            "zed": "zed"
+        }
+    ]
+}

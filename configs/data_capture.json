@@ -1,0 +1,33 @@
+{
+    "gpu": true,
+    "ubuntu": "18.04",
+    "components":
+    {
+        "deps": [
+            {
+                "basics": "basics"
+            },
+            {
+                "python": "python3"
+            }
+        ],
+        "image_processing": [
+            {
+                "opencv": "opencv4"
+            }
+        ],
+        "ros": [
+            {
+                "ros": "melodic"
+            }
+        ],
+        "sensors": [
+            {
+                "realsense": "realsense"
+            },
+            {
+                "zed": "zed"
+            }
+        ]
+    }
+}

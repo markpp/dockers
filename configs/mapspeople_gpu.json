@@ -1,0 +1,29 @@
+{
+    "cuda": 10.2,
+    "ubuntu": "18.04",
+    "components":
+    {
+        "deps": [
+            {
+                "basics": "basics"
+            },
+            {
+                "python": "python3"
+            }
+        ],
+        "pytorch": [
+            {
+                "pytorch": "pytorch"
+            },
+            {
+                "dgl": "dgl-gpu"
+            },
+            {
+                "lightning": "lightning"
+            },
+            {
+                "other": "other"
+            }
+        ]
+    }
+}

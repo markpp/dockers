@@ -9,7 +9,7 @@ def make_user_script(name, scripts):
     user = os.path.join("output", name, 'user.sh')
     with open(user, 'w') as f:
         f.write("#!/bin/bash\n")
-        f.write("USER_ID=${LOCAL_USER_ID:-9001}\n")        
+        f.write("USER_ID=${LOCAL_USER_ID:-9001}\n")
         f.write("echo 'Starting with username : markpp and UID : $USER_ID'\n")
         f.write("useradd -s /bin/bash -u $USER_ID -o -c '' -m markpp\n")
         f.write("export HOME=/home/markpp\n")
@@ -19,7 +19,7 @@ def make_user_script(name, scripts):
             f.write("'/usr/local/bin/{}.sh';".format(script))
         f.write("'bash'")
 
-def make_scripts(name):
+def make_scripts(name, ros=False, gpu=False):
     build = os.path.join("output", name, 'build.sh')
     with open(build, 'w') as f:
             f.write("#!/bin/bash\n")
@@ -28,8 +28,17 @@ def make_scripts(name):
     run = os.path.join("output", name, 'run.sh')
     with open(run, 'w') as f:
         f.write("#!/bin/bash\n")
+
+        f.write("mkdir -p $USER \n")
+        f.write("\n")
+
+        if ros:
+            f.write("mkdir catkin_ws \n")
+
         f.write("xhost +local:\n")
         f.write("docker run -it --net=host \\\n")
+        if gpu:
+            f.write("  --gpus all \\\n")
         f.write("  --volume=/dev:/dev \\\n")
         f.write("  --name=docker{} \\\n".format(name))
         f.write("  --workdir=/home/$USER \\\n")
@@ -38,8 +47,9 @@ def make_scripts(name):
         f.write("  -e QT_GRAPHICSSYSTEM=native \\\n")
         f.write("  -e CONTAINER_NAME=docker{}-dev \\\n".format(name))
         f.write("  -v \"/tmp/.X11-unix:/tmp/.X11-unix\" \\\n")
-        f.write("  -v \"$(pwd)/catkin_ws:/home/catkin_ws\" \\\n")
         f.write("  -v \"$(pwd)/$USER:/home/$USER\" \\\n")
+        if ros:
+            f.write("  -v \"$(pwd)/catkin_ws:/home/catkin_ws\" \\\n")
         f.write("  docker{}:latest\n".format(name))
 
     resume = os.path.join("output", name, 'resume.sh')
@@ -95,12 +105,12 @@ def make_readme():
         f.write("\n")
 
 
-def write_dockerfile(name, components, gpu=False, ubuntu="18.04"):
+def write_dockerfile(name, components, cuda=None, ubuntu="18.04"):
     scripts = []
     dockerfile = os.path.join("output", name, 'Dockerfile')
     with open(dockerfile, 'w') as f:
-        if gpu:
-            f.write("FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu{}\n".format(ubuntu))
+        if cuda:
+            f.write("FROM nvidia/cuda:{}-cudnn7-devel-ubuntu{}\n".format(cuda,ubuntu))
         else:
             f.write("FROM ubuntu:{}\n".format(ubuntu))
         f.write("\n")
@@ -172,8 +182,8 @@ if __name__ == '__main__':
     if not os.path.exists(os.path.join("output", name)):
         os.makedirs(os.path.join("output", name))
 
-    write_dockerfile(name, components, config['gpu'], config['ubuntu'])
+    write_dockerfile(name, components, config['cuda'], config['ubuntu'])
 
-    make_scripts(name)
+    make_scripts(name, ros='ros' in config, gpu='cuda' in config)
 
     make_readme()

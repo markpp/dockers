@@ -29,7 +29,10 @@ def make_scripts(name, ros=False, gpu=False):
     with open(run, 'w') as f:
         f.write("#!/bin/bash\n")
 
-        f.write("mkdir -p $USER \n")
+        f.write("if [ ! -d $USER ] \n")
+        f.write("then \n")
+        f.write("  mkdir -p $USER \n")
+        f.write("fi \n")
         f.write("\n")
 
         if ros:
@@ -110,7 +113,10 @@ def write_dockerfile(name, components, cuda=None, ubuntu="18.04"):
     dockerfile = os.path.join("output", name, 'Dockerfile')
     with open(dockerfile, 'w') as f:
         if cuda:
-            f.write("FROM nvidia/cuda:{}-cudnn7-devel-ubuntu{}\n".format(cuda,ubuntu))
+            if int(cuda) == 11:
+                f.write("FROM nvidia/cuda:{}-cudnn8-devel-ubuntu{}\n".format(cuda,ubuntu))
+            else:
+                f.write("FROM nvidia/cuda:{}-cudnn7-devel-ubuntu{}\n".format(cuda,ubuntu))
         else:
             f.write("FROM ubuntu:{}\n".format(ubuntu))
         f.write("\n")
@@ -163,7 +169,7 @@ if __name__ == '__main__':
     #python clean_junk_frames.py -p /Volumes/WD1TBNTFS/MTBdata/test -e 8
     # construct the argument parser and parse the arguments
     ap = argparse.ArgumentParser()
-    ap.add_argument("-c", "--config", type=str, default="configs/data_capture.json",
+    ap.add_argument("-c", "--config", type=str, default="configs/mining.json",
                     help="Path to config file")
     args = vars(ap.parse_args())
 

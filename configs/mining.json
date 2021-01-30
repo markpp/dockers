@@ -1,0 +1,17 @@
+{
+    "cuda": 11.1,
+    "ubuntu": "20.04",
+    "components":
+    {
+        "deps": [
+	    {
+	    	"basics": "basics"
+	    }
+	],
+	"mining": [
+	    {
+		"ethereum": "ethereum"
+	    }
+	]
+    }
+}

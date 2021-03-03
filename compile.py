@@ -19,7 +19,7 @@ def make_user_script(name, scripts):
             f.write("'/usr/local/bin/{}.sh';".format(script))
         f.write("'bash'")
 
-def make_scripts(name, ros=False, gpu=False):
+def make_scripts(name, display=False, interactive=False, user_dir=False, ros=False, gpu=False):
     build = os.path.join("output", name, 'build.sh')
     with open(build, 'w') as f:
             f.write("#!/bin/bash\n")
@@ -28,29 +28,42 @@ def make_scripts(name, ros=False, gpu=False):
     run = os.path.join("output", name, 'run.sh')
     with open(run, 'w') as f:
         f.write("#!/bin/bash\n")
-
-        f.write("if [ ! -d $USER ] \n")
-        f.write("then \n")
-        f.write("  mkdir -p $USER \n")
-        f.write("fi \n")
+        if user_dir:
+            f.write("if [ ! -d $USER ] \n")
+            f.write("then \n")
+            f.write("  mkdir $USER \n")
+            f.write("fi \n")
         f.write("\n")
 
         if ros:
+            f.write("if [ ! -d $USER ] \n")
+            f.write("then \n")
+            f.write("  mkdir catkin_ws \n")
+            f.write("fi \n")
             f.write("mkdir catkin_ws \n")
 
-        f.write("xhost +local:\n")
-        f.write("docker run -it --net=host \\\n")
+        if display:
+            f.write("xhost +local:\n")
+        if interactive:
+            f.write("docker run -it --net=host \\\n")
+        else:
+            f.write("docker run --net=host \\\n")
+
         if gpu:
             f.write("  --gpus all \\\n")
         f.write("  --volume=/dev:/dev \\\n")
         f.write("  --name=docker{} \\\n".format(name))
-        f.write("  --workdir=/home/$USER \\\n")
+        if user_dir:
+            f.write("  --workdir=/home/$USER \\\n")
         f.write("  -e LOCAL_USER_ID=`id -u $USER` \\\n")
-        f.write("  -e DISPLAY=$DISPLAY \\\n")
-        f.write("  -e QT_GRAPHICSSYSTEM=native \\\n")
+        if display:
+            f.write("  -e DISPLAY=$DISPLAY \\\n")
+            f.write("  -e QT_GRAPHICSSYSTEM=native \\\n")
         f.write("  -e CONTAINER_NAME=docker{}-dev \\\n".format(name))
-        f.write("  -v \"/tmp/.X11-unix:/tmp/.X11-unix\" \\\n")
-        f.write("  -v \"$(pwd)/$USER:/home/$USER\" \\\n")
+        if display:
+            f.write("  -v \"/tmp/.X11-unix:/tmp/.X11-unix\" \\\n")
+        if user_dir:
+            f.write("  -v \"$(pwd)/$USER:/home/$USER\" \\\n")
         if ros:
             f.write("  -v \"$(pwd)/catkin_ws:/home/catkin_ws\" \\\n")
         f.write("  docker{}:latest\n".format(name))
@@ -82,11 +95,11 @@ def make_scripts(name, ros=False, gpu=False):
         f.write("docker rm docker{}\n".format(name))
 
 
-def make_readme():
+def make_readme(cuda=None, ubuntu="18.04"):
     readme = os.path.join("output", name, 'README.md')
     with open(readme, 'w') as f:
         f.write("# Docker image for xx using xx and xx\n")
-        f.write("It is based on a Ubuntu 18.04 distribution and cuda 10.0.\n")
+        f.write("It is based on a Ubuntu {} distribution and cuda {}.\n".format(cuda,ubuntu))
         f.write("\n")
         f.write("## Getting up and running\n")
         f.write("### Step 1: Place the contents in an appropriate location\n")
@@ -169,7 +182,7 @@ if __name__ == '__main__':
     #python clean_junk_frames.py -p /Volumes/WD1TBNTFS/MTBdata/test -e 8
     # construct the argument parser and parse the arguments
     ap = argparse.ArgumentParser()
-    ap.add_argument("-c", "--config", type=str, default="configs/mining.json",
+    ap.add_argument("-c", "--config", type=str, default="configs/deep_learning.json",
                     help="Path to config file")
     args = vars(ap.parse_args())
 
@@ -192,4 +205,4 @@ if __name__ == '__main__':
 
     make_scripts(name, ros='ros' in config, gpu='cuda' in config)
 
-    make_readme()
+    make_readme(config['cuda'], config['ubuntu'])

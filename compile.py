@@ -11,11 +11,11 @@ def make_user_script(name, scripts):
     with open(user, 'w') as f:
         f.write("#!/bin/bash\n")
         f.write("USER_ID=${LOCAL_USER_ID:-9001}\n")
-        f.write("echo 'Starting with username : markpp and UID : $USER_ID'\n")
-        f.write("useradd -s /bin/bash -u $USER_ID -o -c '' -m markpp\n")
-        f.write("export HOME=/home/markpp\n")
+        f.write("echo 'Starting with username : {} and UID : -9001 host -> {}'\n".format(os.getlogin(),os.getuid()))
+        f.write("useradd -s /bin/bash -u $USER_ID -o -c '' -m {}\n".format(os.getlogin()))
+        f.write("export HOME=/home/{}\n".format(os.getlogin()))
 
-        f.write("su markpp bash -c ")
+        f.write("su {} bash -c ".format(os.getlogin()))
         for script in scripts:
             f.write("'/usr/local/bin/{}.sh';".format(script))
         f.write("'bash'")

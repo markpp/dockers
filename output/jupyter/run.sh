@@ -1,11 +1,10 @@
 #!/bin/bash
-if [ ! -d $USER ] 
-then 
-  mkdir $USER 
-fi 
+if [ ! -d $USER ]
+then
+  mkdir $USER
+fi
 
-xhost +local:
-docker run -it --net=host \
+docker run --net=host \
   --gpus all \
   --volume=/dev:/dev \
   --name=dockerjupyter \

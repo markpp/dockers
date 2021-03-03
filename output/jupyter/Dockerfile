@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.1-cudnn8-devel-ubuntu20.04
+FROM ubuntu:20.04
 
 LABEL maintainer "Mark - Auto generated"
 
@@ -10,16 +10,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gpg-agent lsb-release git curl unzip wget gedit nano cmake \
     pkg-config checkinstall yasm libopenblas-dev 
 
-# Install other 
-RUN git clone --recurse-submodules https://github.com/ethereum-mining/ethminer
+# install python3
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 python3-pip python3-dev python3-tk python3-setuptools
 
-RUN cd ethminer/ && mkdir bin/ && cd bin/ && \
-    cmake -D ETHASHCUDA=ON -D ETHASHCL=OFF -D ETHSTRATUM=ON .. && \
-    make install -j8
+# Update pip
+RUN pip3 --no-cache-dir install --upgrade \
+    pip setuptools
+
+# Install useful python pachages 
+RUN pip3 install numpy scipy sklearn umap-learn pandas matplotlib gensim pillow albumentations
+
+
+# Install jupyter notebook etc.
+RUN pip3 install jupyterlab rise
 
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY ethereum.sh /usr/local/bin/
 
 COPY user.sh /usr/local/bin/
 CMD bash -C '/usr/local/bin/user.sh'

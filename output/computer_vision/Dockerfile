@@ -1,4 +1,4 @@
-FROM nvidia/cuda:10.0-cudnn7-devel-ubuntu18.04
+FROM nvidia/cuda:11.0-cudnn8-devel-ubuntu18.04
 
 LABEL maintainer "Mark - Auto generated"
 
@@ -18,8 +18,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip3 --no-cache-dir install --upgrade \
     pip setuptools
 
+# OpenCV
+RUN apt-get update && apt-get install -y libopencv-dev python3-opencv
+
 # Install pytorch
-RUN pip3 install torch torchvision
+RUN pip3 install torch==1.7.1+cu110 torchvision==0.8.2+cu110 -f https://download.pytorch.org/whl/torch_stable.html
 
 # Install pytorch-lightning
 RUN pip3 install pytorch-lightning

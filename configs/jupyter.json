@@ -1,6 +1,9 @@
 {
-    "cuda": 10.0,
-    "ubuntu": "18.04",
+    "display": 1,
+    "interactive": 1,
+    "user_dir": 1,
+    "cuda": 0,
+    "ubuntu": "20.04",
     "components":
     {
         "deps": [
@@ -13,16 +16,12 @@
         ],
         "ml": [
             {
-                "pytorch": "pytorch"
-            },
-            {
-                "lightning": "lightning"
-            },
-            {
-                "CNNs": "CNNs"
-            },
-            {
                 "misc": "misc"
+            }
+        ],
+        "vis": [
+            {
+                "jupyter": "jupyter"
             }
         ]
     }

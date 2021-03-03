@@ -3,6 +3,7 @@ import shutil
 import json
 import argparse
 
+
 def make_user_script(name, scripts):
 
     # user script. creates non root user and calls other initialization scripts
@@ -58,6 +59,8 @@ def make_scripts(name, display=False, interactive=False, user_dir=False, ros=Fal
         f.write("  -e LOCAL_USER_ID=`id -u $USER` \\\n")
         if display:
             f.write("  -e DISPLAY=$DISPLAY \\\n")
+            f.write("  -e XAUTHORITY \\\n")
+            f.write("  -e NVIDIA_DRIVER_CAPABILITIES=all \\\n")
             f.write("  -e QT_GRAPHICSSYSTEM=native \\\n")
         f.write("  -e CONTAINER_NAME=docker{}-dev \\\n".format(name))
         if display:
@@ -121,7 +124,7 @@ def make_readme(cuda=None, ubuntu="18.04"):
         f.write("\n")
 
 
-def write_dockerfile(name, components, cuda=None, ubuntu="18.04"):
+def write_dockerfile(name, components, cuda=None, ubuntu="18.04", interactive=False):
     scripts = []
     dockerfile = os.path.join("output", name, 'Dockerfile')
     with open(dockerfile, 'w') as f:
@@ -137,6 +140,7 @@ def write_dockerfile(name, components, cuda=None, ubuntu="18.04"):
         f.write("LABEL maintainer \"Mark - Auto generated\"\n")
         f.write("\n")
 
+        # for uninterrupted package install
         f.write("ENV DEBIAN_FRONTEND=noninteractive\n")
         f.write("\n")
 
@@ -201,8 +205,8 @@ if __name__ == '__main__':
     if not os.path.exists(os.path.join("output", name)):
         os.makedirs(os.path.join("output", name))
 
-    write_dockerfile(name, components, config['cuda'], config['ubuntu'])
+    write_dockerfile(name, components, config['cuda'], config['ubuntu'], interactive='interactive' in config)
 
-    make_scripts(name, ros='ros' in config, gpu='cuda' in config)
+    make_scripts(name, display='display' in config, interactive='interactive' in config, user_dir='user_dir' in config, ros='ros' in config, gpu='cuda' in config)
 
     make_readme(config['cuda'], config['ubuntu'])

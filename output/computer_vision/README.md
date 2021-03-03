@@ -1,5 +1,5 @@
 # Docker image for xx using xx and xx
-It is based on a Ubuntu 18.04 distribution and cuda 10.0.
+It is based on a Ubuntu 11.0 distribution and cuda 18.04.
 
 ## Getting up and running
 ### Step 1: Place the contents in an appropriate location

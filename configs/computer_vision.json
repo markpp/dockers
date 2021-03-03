@@ -1,5 +1,8 @@
 {
-    "cuda": 10.0,
+    "display": 1,
+    "interactive": 1,
+    "user_dir": 1,
+    "cuda": 11.0,
     "ubuntu": "18.04",
     "components":
     {
@@ -11,9 +14,14 @@
                 "python": "python3"
             }
         ],
+        "ip": [
+            {
+                "opencv": "opencv"
+            }
+        ],
         "ml": [
             {
-                "pytorch": "pytorch"
+                "pytorch_cuda11": "pytorch_cuda11"
             },
             {
                 "lightning": "lightning"

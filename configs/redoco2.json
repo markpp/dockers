@@ -1,0 +1,59 @@
+{
+    "cuda": 11.1,
+    "ubuntu": "20.04",
+    "components":
+    {
+        "deps": [
+            {
+                "system_basics": "system_basics"
+            },
+            {
+                "python": "python3"
+            },
+            {
+                "python_basics": "python_basics"
+            }
+        ],
+        "vis": [
+            {
+                "plot": "plot"
+            }
+        ],
+        "ml": [
+            {
+                "pytorch": "pytorch_cuda_11"
+            },
+            {
+                "lightning": "lightning"
+            },
+            {
+                "dgl": "dgl_cuda_11"
+            },
+            {
+                "cnns": "cnns"
+            },
+            {
+                "misc": "misc"
+            }
+        ],
+        "geo": [
+            {
+                "raster": "raster"
+            },
+            {
+                "vector": "vector"
+            },
+            {
+                "vis": "vis"
+            }
+        ],
+        "datasets": [
+            {
+                "sentinelhub": "sentinelhub"
+            },
+            {
+                "earthengine": "earthengine"
+            }
+        ]
+    }
+}

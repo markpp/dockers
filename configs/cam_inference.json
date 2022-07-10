@@ -1,0 +1,39 @@
+{
+    "cuda": 11.0,
+    "ubuntu": "18.04",
+    "components":
+    {
+        "deps": [
+            {
+                "basics": "basics"
+            },
+            {
+                "python": "python3"
+            }
+        ],
+        "ip": [
+            {
+                "opencv": "opencv"
+            }
+        ],
+        "ml": [
+            {
+                "pytorch": "pytorch_cuda11"
+            },
+            {
+                "lightning": "lightning"
+            },
+            {
+                "CNNs": "CNNs"
+            },
+            {
+                "misc": "misc"
+            }
+        ],
+        "sensors": [
+            {
+                "vimba": "vimba"
+            }
+        ]
+    }
+}

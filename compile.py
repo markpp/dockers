@@ -161,7 +161,7 @@ def write_dockerfile(name, components, cuda=None, ubuntu="18.04", interactive=Fa
                 #f.write("COPY {}.sh /usr/local/bin/\n".format(name))
 
         f.write("RUN rm -rf /var/lib/apt/lists/*\n")
-        f.write("\n")
+        #f.write("\n")
 
         #f.write("WORKDIR /home\n")
         for script in scripts:

@@ -1,0 +1,12 @@
+[Unit]
+After=networking.service
+OnFailure=/home/jetson/Desktop/docker_scripts/run.sh
+
+[Service]
+ExecStartPre=/home/jetson/Desktop/docker_scripts/prep.sh
+ExecStart=/home/jetson/Desktop/docker_scripts/run.sh
+Restart=always
+RestartSec=360
+
+[Install]
+WantedBy=default.target
